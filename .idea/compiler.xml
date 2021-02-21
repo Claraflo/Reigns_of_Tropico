@@ -9,5 +9,8 @@
         <module name="fonctionnel" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="fonctionnel" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

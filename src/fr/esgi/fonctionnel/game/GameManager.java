@@ -7,6 +7,8 @@ public class GameManager {
 
     private static GameManager currentGame;
     private Island currentIsland;
+    private Level level;
+    private int countSeason;
     private HashMap<Level,ArrayList<Integer>> matchLevelAndStatIsland;
 
     public static GameManager getInstance(){
@@ -17,6 +19,7 @@ public class GameManager {
     }
 
     private GameManager(){
+        countSeason=0;
         matchLevelAndStatIsland = new HashMap<>();
         matchLevelAndStatIsland.put(Level.EASY,new ArrayList<>(Arrays.asList(200,15,15,10)));
         matchLevelAndStatIsland.put(Level.MEDIUM,new ArrayList<>(Arrays.asList(150,15,15,30)));
@@ -25,6 +28,7 @@ public class GameManager {
 
     public  boolean initNewGame(Level level) {
 
+        this.level= level;
         if(matchLevelAndStatIsland.get(level)!=null){
             currentIsland = new Island(level,matchLevelAndStatIsland.get(level));
             return true;
@@ -62,10 +66,19 @@ public class GameManager {
             eventManager.applyActionChoice(currentIsland,input);
             linked = eventManager.CheckLinkedEventToChoice(input);
 
-            System.out.println(currentIsland.toString());;
+            System.out.println(currentIsland.toString());
+            countSeason+=1;
+            if(countSeason==4){
+                checkEndSeason();
+            }
         }
+
     }
 
+    private void checkEndSeason() {
+        countSeason=0;
+
+    }
 
 
 }

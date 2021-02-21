@@ -39,7 +39,11 @@ public class Island {
     }
 
     public void setTreasure(int treasure) {
-        this.treasure = treasure;
+        if(treasure<0){
+            this.treasure=0;
+        }else {
+            this.treasure = treasure;
+        }
     }
 
     public int getIndustry() {
@@ -47,7 +51,11 @@ public class Island {
     }
 
     public void setIndustry(int industry) {
-        this.industry = industry;
+        if(industry<0){
+            this.industry=0;
+        }else {
+            this.industry = industry;
+        }
     }
 
     public int getAgriculture() {
@@ -55,7 +63,11 @@ public class Island {
     }
 
     public void setAgriculture(int agriculture) {
-        this.agriculture = agriculture;
+        if (agriculture < 0) {
+            this.agriculture = 0;
+        } else {
+            this.agriculture = agriculture;
+        }
     }
 
     public HashMap<Factions, Faction> getFactions() {
@@ -81,6 +93,15 @@ public class Island {
         }
     }
 
+    public int checkSumIndustryAgriculture(int newValueFeatureOne,int oldValueFeatureTwo){
+
+        if( newValueFeatureOne + oldValueFeatureTwo >100){
+            return (newValueFeatureOne + oldValueFeatureTwo)-100;
+        }
+
+        return newValueFeatureOne;
+    }
+
     public void setFeaturesIsland(ArrayList<Integer> variations) {
 
         if(variations.get(0)>0){
@@ -90,13 +111,13 @@ public class Island {
         }
 
         if(variations.get(0)>0){
-            setIndustry(industry+variations.get(1)*constraint.getGainWeight());
+            setIndustry(checkSumIndustryAgriculture(industry+variations.get(1)*constraint.getGainWeight(),this.agriculture));
         }else{
             setIndustry(industry+variations.get(1)*constraint.getLossWeight());
         }
 
         if(variations.get(0)>0){
-            setAgriculture(agriculture+variations.get(2)*constraint.getGainWeight());
+            setAgriculture(checkSumIndustryAgriculture(agriculture+variations.get(2)*constraint.getGainWeight(),this.industry));
         }else{
             setAgriculture(agriculture+variations.get(2)*constraint.getLossWeight());
         }
@@ -143,7 +164,7 @@ public class Island {
                 "treasure=" + treasure +
                 ", industry=" + industry +
                 ", agriculture=" + agriculture +
-                ", factions=" + infoFaction +
+                ", factions=\n" + infoFaction +
                 '}';
     }
 }

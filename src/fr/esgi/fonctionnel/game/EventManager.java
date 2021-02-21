@@ -1,53 +1,53 @@
 package fr.esgi.fonctionnel.game;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.*;
 
 public class EventManager {
 
-    public HashMap<Integer,Event> events;
+    public HashMap<Integer, Event> events;
     private LinkedList<Integer> eventsToPlay;
     private LinkedList<Integer> eventsPlayed;
     private Event currentEvent;
 
-    public EventManager(){
+    public EventManager() {
 
         //TODO : fonctions pour serialiser.
-        events= new HashMap<>();
+        events = new HashMap<>();
         currentEvent = new Event();
 
-        HashMap<Factions,ArrayList<Integer>> actions = new HashMap<>();
-        actions.put(Factions.CAPITALISTES, new ArrayList<Integer>(Arrays.asList(10,0)));
-        actions.put(Factions.RELIGIEUX,new ArrayList<Integer>(Arrays.asList(-20,-5)));
-        actions.put(Factions.ISLAND,new ArrayList<Integer>(Arrays.asList(10,-5,20)));
 
-        HashMap<Integer,Choice> choices = new HashMap<>();
-        choices.put(1,new Choice("Rep 1",0,new Action(actions)));
-        choices.put(2,new Choice("Rep 2",0,new Action(actions)));
-        choices.put(3,new Choice("Rep 3",3,new Action(actions)));
-        choices.put(4,new Choice("Rep 4",0,new Action(actions)));
+        HashMap<Factions, ArrayList<Integer>> actions = new HashMap<>();
+        actions.put(Factions.CAPITALISTES, new ArrayList<Integer>(Arrays.asList(10, 0)));
+        actions.put(Factions.RELIGIEUX, new ArrayList<Integer>(Arrays.asList(-20, -5)));
+        actions.put(Factions.ISLAND, new ArrayList<Integer>(Arrays.asList(10, -5, 20)));
 
-        events.put(1,new Event(Season.NONE,1,"event1",choices));
-        events.put(2,new Event(Season.NONE,1,"event2",choices));
-        events.put(3,new Event(Season.NONE,0,"event3",choices));
-        events.put(4,new Event(Season.NONE,1,"event4",choices));
+        HashMap<Integer, Choice> choices = new HashMap<>();
+        choices.put(1, new Choice("Rep 1", 0, new Action(actions)));
+        choices.put(2, new Choice("Rep 2", 0, new Action(actions)));
+        choices.put(3, new Choice("Rep 3", 3, new Action(actions)));
+        choices.put(4, new Choice("Rep 4", 0, new Action(actions)));
 
-        eventsToPlay=new   LinkedList<>();
-        for (Map.Entry<Integer,Event> entry : events.entrySet()) {
-            if(entry.getValue().getPrimaryEvent()==1){
+        events.put(1, new Event(Season.NONE, 1, "event1", choices));
+        events.put(2, new Event(Season.NONE, 1, "event2", choices));
+        events.put(3, new Event(Season.NONE, 0, "event3", choices));
+        events.put(4, new Event(Season.NONE, 1, "event4", choices));
+
+
+       eventsToPlay = new LinkedList<>();
+        for (Map.Entry<Integer, Event> entry : events.entrySet()) {
+            if (entry.getValue().getPrimaryEvent() == 1) {
                 eventsToPlay.add(entry.getKey());
             }
         }
 
         serialize(events);
-        eventsPlayed=new LinkedList<>();
+        eventsPlayed = new LinkedList<>();
     }
 
+
     // TODO: Move this:
-    public static <T> void serialize(T monObjet){
+    public static <T> void serialize(T monObjet) {
         FileOutputStream file;
         ObjectOutputStream oos = null;
         try {
@@ -66,6 +66,8 @@ public class EventManager {
         }
 
     }
+
+
 
     public Event getCurrentEvent() {
         return new Event(currentEvent.getSeason(),currentEvent.getPrimaryEvent(),currentEvent.getEvent(), currentEvent.getChoices());
