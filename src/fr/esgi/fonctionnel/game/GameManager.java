@@ -67,18 +67,32 @@ public class GameManager {
             linked = eventManager.CheckLinkedEventToChoice(input);
 
             System.out.println(currentIsland.toString());
+
+            if(!checkIfEndGame()){
+                break;
+            }
+
             countSeason+=1;
             if(countSeason==4){
                 checkEndSeason();
             }
+
         }
 
     }
 
     private void checkEndSeason() {
         countSeason=0;
-
     }
 
+    private boolean checkIfEndGame(){
+
+        currentIsland.updateGlobalSatisfaction();
+
+        if(currentIsland.getGlobalSatisfaction()<currentIsland.getConstraint().getThreshold()){
+            return false;
+        }
+        return true;
+    }
 
 }

@@ -1,8 +1,20 @@
-package fr.esgi.fonctionnel.game;
+package com.tropico.game;
+
+import com.tropico.game.Constraint;
+import com.tropico.game.Factions;
+import com.tropico.game.Level;
+import com.tropico.game.Faction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+/**
+ * Class Island
+ *
+ * Constaint informations about Island
+ *
+ * **/
 
 public class Island {
     private int treasure;
@@ -39,9 +51,9 @@ public class Island {
     }
 
     public void setTreasure(int treasure) {
-        if(treasure<0){
-            this.treasure=0;
-        }else {
+        if (treasure < 0) {
+            this.treasure = 0;
+        } else {
             this.treasure = treasure;
         }
     }
@@ -51,9 +63,9 @@ public class Island {
     }
 
     public void setIndustry(int industry) {
-        if(industry<0){
-            this.industry=0;
-        }else {
+        if (industry < 0) {
+            this.industry = 0;
+        } else {
             this.industry = industry;
         }
     }
@@ -97,10 +109,10 @@ public class Island {
         }
     }
 
-    public int checkSumIndustryAgriculture(int newValueFeatureOne,int oldValueFeatureTwo){
+    public int checkSumIndustryAgriculture(int newValueFeatureOne, int oldValueFeatureTwo) {
 
-        if( newValueFeatureOne + oldValueFeatureTwo >100){
-            return (newValueFeatureOne + oldValueFeatureTwo)-100;
+        if (newValueFeatureOne + oldValueFeatureTwo > 100) {
+            return 100 - oldValueFeatureTwo;
         }
 
         return newValueFeatureOne;
@@ -108,28 +120,28 @@ public class Island {
 
     public void setFeaturesIsland(ArrayList<Integer> variations) {
 
-        if(variations.get(0)>0){
-            setTreasure(treasure+variations.get(0)*constraint.getGainWeight());
-        }else{
-            setTreasure(treasure+variations.get(0)*constraint.getLossWeight());
+        if (variations.get(0) > 0) {
+            setTreasure(treasure + variations.get(0) * constraint.getGainWeight());
+        } else {
+            setTreasure(treasure + variations.get(0) * constraint.getLossWeight());
         }
 
-        if(variations.get(0)>0){
-            setIndustry(checkSumIndustryAgriculture(industry+variations.get(1)*constraint.getGainWeight(),this.agriculture));
-        }else{
-            setIndustry(industry+variations.get(1)*constraint.getLossWeight());
+        if (variations.get(0) > 0) {
+            setIndustry(checkSumIndustryAgriculture(industry + variations.get(1) * constraint.getGainWeight(), this.agriculture));
+        } else {
+            setIndustry(industry + variations.get(1) * constraint.getLossWeight());
         }
 
-        if(variations.get(0)>0){
-            setAgriculture(checkSumIndustryAgriculture(agriculture+variations.get(2)*constraint.getGainWeight(),this.industry));
-        }else{
-            setAgriculture(agriculture+variations.get(2)*constraint.getLossWeight());
+        if (variations.get(0) > 0) {
+            setAgriculture(checkSumIndustryAgriculture(agriculture + variations.get(2) * constraint.getGainWeight(), this.industry));
+        } else {
+            setAgriculture(agriculture + variations.get(2) * constraint.getLossWeight());
         }
     }
 
-    public void setFactions(Factions factionName,ArrayList<Integer> variations) {
-        setSatisfactionFactions(factionName,variations.get(0));
-        setPopulationFactions(factionName,variations.get(1));
+    public void setFactions(Factions factionName, ArrayList<Integer> variations) {
+        setSatisfactionFactions(factionName, variations.get(0));
+        setPopulationFactions(factionName, variations.get(1));
     }
 
 
@@ -148,6 +160,7 @@ public class Island {
 
         if (effectifTotal != 0) {
             this.globalSatisfaction /= effectifTotal;
+            this.globalSatisfaction = Math.round(this.globalSatisfaction * 100.0) / 100.0;
         } else {
             this.globalSatisfaction = 0;
         }
@@ -170,5 +183,14 @@ public class Island {
                 ", agriculture=" + agriculture +
                 ", factions=\n" + infoFaction +
                 '}';
+    }
+
+    public int getTotalPopulation() {
+
+        int totalPop = 0;
+        for (Map.Entry<Factions, Faction> entry : factions.entrySet()) {
+            totalPop += entry.getValue().getPopulation();
+        }
+        return totalPop;
     }
 }
